@@ -171,8 +171,17 @@ function isDateInPeriod(date, period) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  const formattedDate = new Date(date);
+  let hours = new Date(date).getUTCHours();
+  const minutes = new Date(date).getUTCMinutes().toString().padStart(2, '0');
+  const seconds = new Date(date).getUTCSeconds().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours %= 12;
+  if (hours === 0) {
+    hours = 12;
+  }
+  return `${formattedDate.getUTCMonth() + 1}/${formattedDate.getUTCDate()}/${formattedDate.getUTCFullYear()}, ${hours}:${minutes}:${seconds} ${ampm}`;
 }
 
 /**
@@ -187,8 +196,17 @@ function formatDate(/* date */) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  const lastDayOfMonth = new Date(year, month, 0).getDate();
+  let weekendCount = 0;
+  for (let day = 1; day <= lastDayOfMonth; day += 1) {
+    const date = new Date(year, month - 1, day);
+    const dayOfWeek = date.getDay();
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+      weekendCount += 1;
+    }
+  }
+  return weekendCount;
 }
 
 /**
@@ -272,8 +290,9 @@ function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
  * Date(2022, 2, 1) => false
  * Date(2020, 2, 1) => true
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const leapYear = new Date(date).getFullYear();
+  return leapYear % 4 === 0 && (leapYear % 100 !== 0 || leapYear % 400 === 0);
 }
 
 module.exports = {
